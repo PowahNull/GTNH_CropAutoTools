@@ -549,7 +549,7 @@ local function collectAndplantSeeds()
     log "checking for interruption params"
     if interruptCheck() then
       log "interrupted by params"
-      if moving_backward then
+      if not moving_backward then
         robot.turnAround()
       end
       goBackEmergency(Xpos, Zpos)
