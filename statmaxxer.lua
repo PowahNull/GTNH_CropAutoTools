@@ -50,8 +50,6 @@ local requiredConfig = {
   "fieldSize",
   "reserveCropStickSlots",
   "targetCropStorageSlots",
-  "debugPlant",
-  "usingCabinet",
   "logAction",
   "targetCrop",
 }
