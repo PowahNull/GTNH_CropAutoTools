@@ -147,7 +147,10 @@ for i = 1, fieldSize do
   moving_backward = not moving_backward
 end
 
-robot.turnAround()
+if not moving_backward then
+  robot.turnAround()
+end
+
 for _ = 1, fieldSize - 1  do
   robot.forward()
 end
