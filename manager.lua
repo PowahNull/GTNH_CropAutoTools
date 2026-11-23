@@ -419,7 +419,10 @@ local function collectSeeds()
     moving_backward = not moving_backward
   end
 
-  robot.turnAround()
+  if not moving_backward then
+    robot.turnAround()
+  end
+  
   for _ = 1, fieldSize - 1  do
     robot.forward()
   end
@@ -524,7 +527,10 @@ local function plantSeeds()
     moving_backward = not moving_backward
   end
 
-  robot.turnAround()
+  if not moving_backward then
+    robot.turnAround()
+  end
+
   for _ = 1, fieldSize - 1  do
     robot.forward()
   end
