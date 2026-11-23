@@ -419,7 +419,7 @@ local function collectSeeds()
     moving_backward = not moving_backward
   end
 
-  if not moving_backward then
+  if moving_backward then
     robot.turnAround()
   end
   
@@ -527,7 +527,7 @@ local function plantSeeds()
     moving_backward = not moving_backward
   end
 
-  if not moving_backward then
+  if moving_backward then
     robot.turnAround()
   end
 
