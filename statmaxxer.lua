@@ -126,7 +126,6 @@ local function sortCropsticks()
         robot.transferTo(1, can_move)
         main_slot_count = math.min(main_slot_count + can_move, 64)
       end
-
       if main_slot_count == 64 then break end
     end
   end
@@ -404,17 +403,19 @@ end
 -- replace slot slots after planting seed
 local function replaceLostSlot(slot)
   -- replace lost slot
-  local top_slot = top_empty_stack - 1
-  if top_slot > cropstick_reserve then
-    -- inventory is not empty
-    robot.select(top_slot)
-    if robot.transferTo(slot, 64) then
-      -- moved item successfully
-      scanSlot(slot)
-      scanSlot(top_slot)
-      top_empty_stack = top_slot
+  if robot.count(slot) == 0 then
+    local top_slot = top_empty_stack - 1
+    if top_slot > cropstick_reserve then
+      -- inventory is not empty
+      robot.select(top_slot)
+      if robot.transferTo(slot, 64) then
+        -- moved item successfully
+        scanSlot(slot)
+        scanSlot(top_slot)
+        top_empty_stack = top_slot
+      end
+      -- if this fails then there is a still a seed bag/item there
     end
-    -- if this fails then there is a still a seed bag/item there
   end
 end
 
@@ -459,11 +460,17 @@ local function selectBestSeed()
   for slot, item in pairs(internal_inv) do
     if type(item) == "table" then
       -- check if it is a seed
-      local rank = seedRanking(item.gain, item.growth, item.resist)
-      if rank > best_value and item.name == config.targetCrop then
-        -- if it is the target crop and best rank then select
-        best_value = rank
-        slot_select = slot
+      if item.name == config.targetCrop then
+        -- check if it is the correct crop
+        local rank = seedRanking(item.gain, item.growth, item.resist)
+        if rank > best_value then
+          -- if it is the target crop and best rank then select
+          -- prevent errors in computation
+          if robot.count(slot) > 0 then
+            best_value = rank
+            slot_select = slot
+          end
+        end
       end
     end
   end
@@ -663,7 +670,7 @@ local function manageInventory()
   log "dumped output seeds into output seeds storage"
 
   -- dump remaining seeds not sorted into output
-  for slot = 1, inv_size do
+  for slot = cropstick_reserve + 1, inv_size do
     if robot.count(slot) > 0 then
       robot.select(slot)
       robot.dropUp()
@@ -682,6 +689,7 @@ local function selectSeeds()
   log "selecting seeds to plant"
   while robot.suckUp(64) do
     -- nothing
+    os.sleep(0.1)
   end
   log "successfully selected all seeds"
 end
