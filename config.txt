@@ -1,0 +1,8 @@
+int:fieldSize:15
+int:reserveCropStickSlots:4
+int:targetCropStorageSlots:3
+bin:debugPlant:false
+bin:usingCabinet:true
+bin:logAction:true
+str:targetCrop:Sugar Beet
+arr:Byproduct:{Salty Root,Rape,Blazereed}
