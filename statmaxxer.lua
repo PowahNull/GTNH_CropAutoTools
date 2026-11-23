@@ -314,8 +314,8 @@ end
 local function dumpGarbage()
   local function drop(slot)
     robot.select(slot)
-        robot.dropDown()
-        internal_inv[slot] = nil
+    robot.dropDown()
+    internal_inv[slot] = nil
   end
 
   local field_worst_ranking = fieldWorstSeed()
@@ -493,7 +493,7 @@ local function collectAndplantSeeds()
           if isGoodSpotForChild(Xpos, Zpos) then
             plantDoubleCrop()
           end
-        else
+        elseif scanned.name ~= "cropstick" then
           -- collect crop and replant
           robot.useDown(sides.up)
           plantDoubleCrop()
