@@ -289,6 +289,8 @@ local function rescanSerialInventory()
   while top_empty_stack <= inv_size do
     if scanSlot(top_empty_stack) then
       top_empty_stack = top_empty_stack + 1
+    else
+      break
     end
   end
 end
@@ -473,6 +475,7 @@ end
 -- main work function
 local function collectAndplantSeeds()
   log "collecting and planting seeds"
+  robot.forward()
   local Xpos, Zpos = 1, 1
   local moving_backward = false
 
