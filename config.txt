@@ -1,8 +1,8 @@
 int:fieldSize:15 -- field must be a square, the fieldSize determine the side of the square's length
 int:reserveCropStickSlots:4 -- how many stacks of cropsticks the robot should reserve
 int:targetCropStorageSlots:3 -- how many chests planted in a row are reserved for output seeds
-bin:debugPlant:false -- debug for exclusively planting
-bin:usingCabinet:true -- enable if using manager.lua and output seeds storage are ExtraUtilities cabinets
+bin:debugPlant:false -- debug for exclusively planting (only for manager.lua)
+bin:usingCabinet:true -- enable if output seeds storage are ExtraUtilities cabinets (only for manager.lua)
 bin:logAction:true -- enable logging of actions
 str:targetCrop:Sugar Beet -- main crop for statmaxxing/seed duping
-arr:Byproduct:{Salty Root,Rape,Blazereed} -- crops that is stored if collected from breeding byproduct
+arr:Byproduct:{Salty Root,Rape,Blazereed} -- crops that is stored if collected from breeding byproduct (only for manager.lua)
