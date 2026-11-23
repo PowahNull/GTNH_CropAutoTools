@@ -237,12 +237,10 @@ end
 local function seedRanking(gain, growth, resist)
   local rank = 0
   rank = rank + gain * 2
-  rank = rank - resist * 5
-  if growth < 21 then
-    rank = rank + growth * 3
-  elseif growth == 21 then
-    rank = rank + 256
-  elseif growth > 21 then
+  rank = rank - resist * 3
+  if growth <= 21 then
+    rank = rank + growth * 5
+  else
     -- very bad seed for planting as it can spread weeds
     rank = rank - 10000
   end
@@ -430,7 +428,7 @@ local function plantOnAir(slot)
 
   robot.select(slot)
   invcon.equip() -- seed bag
-  robot.useDown(sides.up)
+  robot.useDown() -- plant seed
 
   invcon.equip() -- spade
 
@@ -440,14 +438,14 @@ end
 -- plant on cropstick with seed or doublecropstick
 local function plantOnCropstick(slot)
   -- destroy current plant or double cropstick
-  robot.swingDown(sides.up)
+  robot.useDown()
 
-  -- recheck inventory for picke up items
+  -- recheck inventory for picked up items
   rescanSerialInventory()
 
   robot.select(slot)
   invcon.equip() -- seed bag
-  robot.useDown(sides.up) -- plant seed
+  robot.useDown() -- plant seed
 
   invcon.equip() -- spade
 
@@ -544,7 +542,7 @@ local function collectAndplantSeeds()
     log "checking for interruption params"
     if interruptCheck() then
       log "interrupted by params"
-      if not moving_backward then
+      if moving_backward then
         robot.turnAround()
       end
       goBackEmergency(Xpos, Zpos)
@@ -571,7 +569,7 @@ local function collectAndplantSeeds()
   -- finished scanning field so do one last garbage collection
   dumpGarbage()
 
-  if not moving_backward then
+  if moving_backward then
     robot.turnAround()
   end
 
@@ -723,6 +721,9 @@ local function overwrite_savestate()
   savestate_file:close()
   log "savestate overwritten"
 end
+
+-- init
+rescanSerialInventory()
 
 -- main loop
 while true do
