@@ -327,12 +327,14 @@ local function dumpGarbage()
       elseif item.name ~= config.targetCrop then
         -- not the ideal crop so drop
         drop(slot)
-      elseif field_worst_ranking > seedRanking(item.gain, item.growth, item.resist) then
-        -- very bad seed compared to field standard
-        drop(slot)
-      elseif not isSeedGood(item.gain, item.growth, item.resist) then
-        -- not worth saving
-        drop(slot)
+      else
+        if seedRanking(item.gain, item.growth, item.resist) < field_worst_ranking then
+          -- very bad seed compared to field standard
+          drop(slot)
+        elseif not isSeedGood(item.gain, item.growth, item.resist) then
+          -- not worth saving
+          drop(slot)
+        end
       end
     end
   end
@@ -504,23 +506,18 @@ local function collectAndplantSeeds()
       else
         -- plant or replace crop
         local slot_select, seed_value = selectBestSeed()
-        if scanned.name == "air" and isGoodSpotForParent(Xpos, Zpos) then
-          -- if the conditions are good then simply plant the best seed
-          if slot_select > 0 then
-            -- has available seeds
+        if slot_select > 0 then
+          -- has available seeds
+          if scanned.name == "air" and isGoodSpotForParent(Xpos, Zpos) then
+            -- if the conditions are good then simply plant the best seed
             plantOnAir(slot_select)
             field[Xpos][Zpos] = scanCrop()
-          end
-        elseif scanned.name == "cropstick" or scanned.name == "Weed" then
-          -- misplaced cropstick, plant seed or weed
-          if slot_select > 0 then
-            -- has available seeds
+          elseif scanned.name == "cropstick" or scanned.name == "Weed" then
+            -- misplaced cropstick, plant seed or weed
             plantOnCropstick(slot_select)
             field[Xpos][Zpos] = scanCrop()
-          end
-        else
-          -- normal plant, must compare before replacing
-          if slot_select > 0 then
+          else
+            -- normal plant, must compare before replacing
             local crop_stat = scanCrop()
             local currentCropValue = seedRanking(crop_stat.gain, crop_stat.growth, crop_stat.resist)
             if seed_value > currentCropValue then
@@ -528,9 +525,11 @@ local function collectAndplantSeeds()
               plantOnCropstick(slot_select)
               field[Xpos][Zpos] = scanCrop()
             else
-              field[Xpos][Zpos] = crop_stat
+              field[Xpos][Zpos] = scanned
             end
           end
+        else
+          field[Xpos][Zpos] = scanned
         end
       end
 
